@@ -37,10 +37,20 @@ takes value of nil
 
 `message` - in case of error you will get a message. 
 
-## Docs
+## API Documentation
 
-CodeX Capella [documentation](https://github.com/codex-team/capella#readme)
+Full documentation of CodeX Capella can be found on GitHub –
+https://github.com/codex-team/capella
 
-## Contribution
+## Issues and improvements
 
-Feel free to aks a question, report a bug or fork and improve a package
+Ask a question or report a bug on the [create issue page](https://github.com/codex-team/capella.scala/issues/new).
+
+Know how to improve **capella.scala**? [Fork it](https://github.com/codex-team/capella.scala) and send pull request.
+
+You can also write questions and suggestions to the [CodeX Team’s
+email](team@ifmo.su).
+
+## License
+
+[MIT](https://github.com/codex-team/codex.notes/blob/master/LICENSE)

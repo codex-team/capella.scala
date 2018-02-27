@@ -1,11 +1,12 @@
 package codex.capella
 
-import scalaj.http._
 import java.io._
+
+import scalaj.http._
 
 case class customException(smth:String)  extends Exception(smth)
 
-object Capella extends App {
+object Capella {
 
   val apiUrl = "https://capella.pics/upload"
 
@@ -35,17 +36,6 @@ object Capella extends App {
       case e: HttpStatusException => Right(customException("API return response with code: " + e.code))
       case e: Exception => Right(customException("Exception: " + e))
     }
-  }
-
-  //  uploadFile("C:\\sobaki-6df25d04eb75.jpg") match {
-  //    case Left(x) => println("Result: " + x)
-  //    case Right(x) => println("Exception: " + x)
-  //  }
-  //
-
-  uploadUrl("https://ifmo.su/public/app/img/products/capella.png") match {
-    case Left(x) => println("Result: " + x)
-    case Right(x) => println("Exception: " + x)
   }
 
 }
