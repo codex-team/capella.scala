@@ -1,7 +1,6 @@
 package codex.capella
 
 import java.io._
-
 import scalaj.http._
 
 case class customException(smth:String)  extends Exception(smth)
