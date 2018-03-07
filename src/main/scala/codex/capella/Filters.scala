@@ -1,13 +1,45 @@
 package codex.capella
 
+/**
+  * Pipeline helper class for the support of the following syntax:
+  * url |> filterOne |> filterTwo
+  */
+object Pipeline {
+
+  implicit class RichPipes[Y](y: Y) {
+    def |>[Z](f: Y => Z) = f(y)
+    def &>[X, Z](f: (X, Y) => Z): (X => Z) = (x: X) => f(x, y)
+  }
+
+}
+
+/**
+  * Filtering helpers for image result URL
+  */
 object Filters {
 
-  def pixelize(power: Int): (String => String) = {
+  /**
+    * Pixelize filter.
+    * Render image using large colored blocks.
+    *
+    * @param pixels - Number of pixels on the largest side
+    * @return Filtered image URL
+    */
+  def pixelize(pixels: Int): (String => String) = {
 
-    (url: String) => s"$url/pixelize/" + power.toString
+    (url: String) => s"$url/pixelize/" + pixels.toString
 
   }
 
+  /**
+    * Crop filter.
+    * Cover the target rectangle by the image.
+    *
+    * @param width - Target rectangles width or target squares size if no height was given
+    * @param height - (optional) Target rectangle height
+    * @param additional - (optional) Crop an area from specified point
+    * @return Filtered image URL
+    */
   def crop(width: Int, height: Option[Int] = None, additional: Option[(Int, Int)] = None) = {
 
     (url: String) => s"$url/crop/" + width.toString + (height match {
@@ -26,6 +58,14 @@ object Filters {
 
   }
 
+  /**
+    * Resize filter.
+    * Scale the image to the largest size such that both its width and its height can fit inside the target rectangle.
+    *
+    * @param width - Maximum images width or maximum target squares size if no height was given
+    * @param height - (optional) Maximum image's height
+    * @return
+    */
   def resize(width: Int, height: Option[Int] = None) = {
 
     (url: String) => s"$url/resize/" + width.toString + (height match {
@@ -35,6 +75,19 @@ object Filters {
       case None => ""
 
     })
+
+  }
+
+  /**
+    * Apply sequence of filters to the image URL and get result URL of the filtered image.
+    *
+    * @param url - source URL from capella.pics
+    * @param filters - sequence of filters
+    * @return - Result URL of the filtered image
+    */
+  def applyFilters(url: String, filters: Seq[String => String]): String = {
+
+    filters.foldLeft(url){ (accumulator, f) => f(accumulator) }
 
   }
 

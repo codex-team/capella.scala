@@ -37,6 +37,38 @@ takes value of nil
 
 `message` - in case of error you will get a message. 
 
+## Filters
+
+You can apply filters to the image's URL. 
+Currenty support all filters for CodeX Capella [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
+
+Example of resize filter
+```$scala
+import codex.capella.Pipeline._
+import codex.capella.Filters
+
+val url = "https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32"
+val filteredUrl = url |> Filters.resize(700, 700)
+println(filteredUrl)
+
+// got: https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32/resize/700x700
+```
+
+You can also apply sequence of filters using pipeline operator or applyFilters method.
+
+```$scala
+import codex.capella.Pipeline._
+import codex.capella.Filters
+
+val url = "https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32"
+val filteredUrl = url |> Filters.resize(700, 700) |> Filters.crop(100, 100, (50, 50))
+
+val filteredUrlAnother = Filters.applyFilters(url, Seq(Filters.resize(700, 700), Filters.crop(500)))
+
+println(filteredUrlAnother)
+// got: https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32/resize/700x700/crop/500
+```
+
 ## API Documentation
 
 Full documentation of CodeX Capella can be found on GitHub –
