@@ -1,5 +1,7 @@
 # Capella SDK for Scala
 
+[![Build Status](https://semaphoreci.com/api/v1/n0str/capella-scala/branches/master/badge.svg)](https://semaphoreci.com/n0str/capella-scala)
+
 This package contains methods for images upload to the Capella Server
 
 ## Installation
