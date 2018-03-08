@@ -3,6 +3,12 @@ package codex.capella
 import codex.capella.Pipeline._
 import org.scalatest.{FlatSpec, Matchers}
 
+/**
+  * Test codex.capella.Filters object
+  *
+  * Currently support testing of pixelize, resize, crop filters.
+  * Also test pipeline operator and applyFilters method.
+  */
 class FiltersTest extends FlatSpec with Matchers {
 
   val baseUrl = "https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32"
