@@ -50,7 +50,7 @@ Currently we support the following filters:
 More information about Capella filters by the link: [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
 
 Example of resize filter
-```$scala
+```scala
 import codex.capella.Pipeline._
 import codex.capella.Filters
 
@@ -63,7 +63,7 @@ println(filteredUrl)
 
 You can also apply sequence of filters using pipeline operator or applyFilters method.
 
-```$scala
+```scala
 import codex.capella.Pipeline._
 import codex.capella.Filters
 
