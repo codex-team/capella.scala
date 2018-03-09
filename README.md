@@ -1,45 +1,84 @@
 # Capella SDK for Scala
 
-This package contains methods for images upload to the Capella Server
+[![Build Status](https://semaphoreci.com/api/v1/n0str/capella-scala/branches/master/badge.svg)](https://semaphoreci.com/n0str/capella-scala)
+
+This package contains methods for images upload to the Capella
 
 ## Installation
 
 ### Sbt
 
 ```scala
-sbt build
+sbt compile
 sbt run
 ```
 
 ## Usage
 
 ```scala
-uploadUrl("https://ifmo.su/public/app/img/products/capella.png") match {
+import codex.capella.CapellaApi
+
+CapellaApi.uploadUrl("https://ifmo.su/public/app/img/products/capella.png") match {
   case Left(x) => println("Result: " + x)
   case Right(x) => println("Exception: " + x)
 }
 ```
 
 ```scala
-uploadFile("C:\\capella.jpg") match {
+CapellaApi.uploadFile("C:\\capella.jpg") match {
   case Left(x) => println("Result: " + x)
   case Right(x) => println("Exception: " + x)
 }
 ```
 
-Response implements capella response struct:
+Response object contains the following parameters:
 `success`, `message`, `id`, `url`
 
-`success` is `true` when CodeX capella saved the image
+* `success` is `true` when Capella successfully saved the image
+* `url` - special allocated URL for uploaded image. If `success` is `false` this property takes value of nil
+* `id` – an unique image identifier which is equal to the part of the `url` 
+* `message` - in the case of error you will get a message. 
 
-`url` - special allocated URL for uploaded image. If `success` is `false` this propery 
-takes value of nil
+## Filters
 
-`message` - in case of error you will get a message. 
+You can apply filters to the image's URL. 
+Currently we support the following filters:
+* pixelize – render image using large colored blocks.
+* crop – cover the target rectangle by the image.
+* resize – scale the image.
+
+More information about Capella filters by the link: [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
+
+Example of resize filter
+```$scala
+import codex.capella.Pipeline._
+import codex.capella.Filters
+
+val url = "https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32"
+val filteredUrl = url |> Filters.resize(700, 700)
+println(filteredUrl)
+
+// got: https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32/resize/700x700
+```
+
+You can also apply sequence of filters using pipeline operator or applyFilters method.
+
+```$scala
+import codex.capella.Pipeline._
+import codex.capella.Filters
+
+val url = "https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32"
+val filteredUrl = url |> Filters.resize(700, 700) |> Filters.crop(100, 100, (50, 50))
+
+val filteredUrlAnother = Filters.applyFilters(url, Seq(Filters.resize(700, 700), Filters.crop(500)))
+
+println(filteredUrlAnother)
+// got: https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32/resize/700x700/crop/500
+```
 
 ## API Documentation
 
-Full documentation of CodeX Capella can be found on GitHub –
+Full documentation of Capella can be found on GitHub –
 https://github.com/codex-team/capella
 
 ## Issues and improvements
