@@ -1,6 +1,6 @@
 # Capella SDK for Scala
 
-This package contains methods for images upload to the CodeX Capella
+This package contains methods for images upload to the Capella
 
 ## Installation
 
@@ -32,7 +32,7 @@ CapellaApi.uploadFile("C:\\capella.jpg") match {
 Response object contains the following parameters:
 `success`, `message`, `id`, `url`
 
-* `success` is `true` when CodeX Capella successfully saved the image
+* `success` is `true` when Capella successfully saved the image
 * `url` - special allocated URL for uploaded image. If `success` is `false` this property takes value of nil
 * `id` – an unique image identifier which is equal to the part of the `url` 
 * `message` - in the case of error you will get a message. 
@@ -45,7 +45,7 @@ Currently we support the following filters:
 * crop – cover the target rectangle by the image.
 * resize – scale the image.
 
-More information about CodeX Capella filters by the link: [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
+More information about Capella filters by the link: [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
 
 Example of resize filter
 ```$scala
@@ -76,7 +76,7 @@ println(filteredUrlAnother)
 
 ## API Documentation
 
-Full documentation of CodeX Capella can be found on GitHub –
+Full documentation of Capella can be found on GitHub –
 https://github.com/codex-team/capella
 
 ## Issues and improvements
