@@ -1,46 +1,51 @@
 # Capella SDK for Scala
 
-This package contains methods for images upload to the Capella Server
+This package contains methods for images upload to the CodeX Capella
 
 ## Installation
 
 ### Sbt
 
 ```scala
-sbt build
+sbt compile
 sbt run
 ```
 
 ## Usage
 
 ```scala
-uploadUrl("https://ifmo.su/public/app/img/products/capella.png") match {
+import codex.capella.CapellaApi
+
+CapellaApi.uploadUrl("https://ifmo.su/public/app/img/products/capella.png") match {
   case Left(x) => println("Result: " + x)
   case Right(x) => println("Exception: " + x)
 }
 ```
 
 ```scala
-uploadFile("C:\\capella.jpg") match {
+CapellaApi.uploadFile("C:\\capella.jpg") match {
   case Left(x) => println("Result: " + x)
   case Right(x) => println("Exception: " + x)
 }
 ```
 
-Response implements capella response struct:
+Response object contains the following parameters:
 `success`, `message`, `id`, `url`
 
-`success` is `true` when CodeX capella saved the image
-
-`url` - special allocated URL for uploaded image. If `success` is `false` this propery 
-takes value of nil
-
-`message` - in case of error you will get a message. 
+* `success` is `true` when CodeX Capella successfully saved the image
+* `url` - special allocated URL for uploaded image. If `success` is `false` this property takes value of nil
+* `id` – an unique image identifier which is equal to the part of the `url` 
+* `message` - in the case of error you will get a message. 
 
 ## Filters
 
 You can apply filters to the image's URL. 
-Currenty support all filters for CodeX Capella [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
+Currently we support the following filters:
+* pixelize – render image using large colored blocks.
+* crop – cover the target rectangle by the image.
+* resize – scale the image.
+
+More information about CodeX Capella filters by the link: [https://github.com/codex-team/capella#filters](https://github.com/codex-team/capella#filters)
 
 Example of resize filter
 ```$scala
