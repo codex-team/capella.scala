@@ -1,24 +1,40 @@
-import codex.capella.{FilterArg, Filters}
+import codex.capella.{CapellaApi, FilterArg, Filters}
 import com.joefkelley.argyle._
+import spray.json._
+import DefaultJsonProtocol._
 
 import scala.util.{Failure, Success}
 
-case class CapellaConfig(f: List[String])
+case class CapellaConfig(filters: List[String], file: Option[String], url: Option[String])
+case class CapellaApiOutput(id: String, url: String, success: Boolean, message: String)
 
-trait Filter
+object MyJsonProtocol extends DefaultJsonProtocol {
+  implicit val capellaApiOutput = jsonFormat4(CapellaApiOutput)
+}
 
-case class Crop(breed: String, name: String) extends Filter
-
-case class Resize(breed: String, name: String) extends Filter
-
-case class Pixelize(pixels: Int) extends Filter
-
+import MyJsonProtocol._
 
 object Run extends App {
 
-  def process(url: String, filters: Seq[String]) = {
+  def process(args: CapellaConfig): Unit = {
 
-    val filterChain: Seq[String => String] = filters.map(
+    var url = ""
+
+    if (args.file.isDefined) {
+      CapellaApi.uploadFile(args.file.get) match {
+        case Left(x) => url = x.parseJson.convertTo[CapellaApiOutput].url
+        case Right(x) => println("Exception: " + x)
+      }
+    }
+
+    if (args.url.isDefined) {
+      CapellaApi.uploadUrl(args.url.get) match {
+        case Left(x: String) => url = x.parseJson.convertTo[CapellaApiOutput].url
+        case Right(x) => println("Exception: " + x)
+      }
+    }
+
+    val filterChain: Seq[String => String] = args.filters.map(
       (filter) => filter.split(":") match {
         case Array(filterType: String, params: String) =>
           Filters.callFilter(FilterArg(filterType, params.split(",").map(x => x.toInt)))
@@ -26,18 +42,22 @@ object Run extends App {
       }
     )
 
-    println(Filters.applyFilters(mockUrl, filterChain))
+    if (url.isEmpty) {
+      url = io.Source.stdin.getLines().next
+    }
+
+    println(Filters.applyFilters(url, filterChain))
 
   }
 
-  val mockUrl = "http://capella.pics/test"
-
   val a = (
-    repeated[String]("--filter", "-f")
+    repeated[String]("--filter", "-i") and
+    optional[String]("--file", "-f") and
+    optional[String]("--url", "-u")
     ).to[CapellaConfig]
 
   a.parse(args) match {
-    case Success(params) => process(mockUrl, params.f)
+    case Success(params) => process(params)
     case Failure(e) => throw e
   }
 
