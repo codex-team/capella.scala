@@ -16,10 +16,17 @@ import MyJsonProtocol._
 
 object Run extends App {
 
+  /**
+    * Process arguments
+    *
+    * @param args - cli parameters (filter, file, url)
+    */
   def process(args: CapellaConfig): Unit = {
 
+    // result URL
     var url = ""
 
+    // load local file to Capella
     if (args.file.isDefined) {
       CapellaApi.uploadFile(args.file.get) match {
         case Left(x) => url = x.parseJson.convertTo[CapellaApiOutput].url
@@ -27,6 +34,7 @@ object Run extends App {
       }
     }
 
+    // load file to Capella by URL
     if (args.url.isDefined) {
       CapellaApi.uploadUrl(args.url.get) match {
         case Left(x: String) => url = x.parseJson.convertTo[CapellaApiOutput].url
@@ -34,6 +42,7 @@ object Run extends App {
       }
     }
 
+    // apply filters from -i argument
     val filterChain: Seq[String => String] = args.filters.map(
       (filter) => filter.split(":") match {
         case Array(filterType: String, params: String) =>
@@ -42,6 +51,7 @@ object Run extends App {
       }
     )
 
+    // if URL is empty, let's take it from stdin
     if (url.isEmpty) {
       url = io.Source.stdin.getLines().next
     }
