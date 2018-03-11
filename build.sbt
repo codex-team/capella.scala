@@ -9,5 +9,6 @@ libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.0.5",
   "org.scalatest" %% "scalatest" % "3.0.5",
   "org.scalacheck" %% "scalacheck" % "1.13.4",
-  "com.joefkelley" %% "argyle" % "1.0.0"
+  "com.joefkelley" %% "argyle" % "1.0.0",
+  "io.spray" %%  "spray-json" % "1.3.3"
 )
