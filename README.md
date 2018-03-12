@@ -6,9 +6,17 @@ This package contains methods for images upload to the Capella
 
 ## Installation
 
-### Sbt
+### From binary
 
-```scala
+```
+java -jar capella.jar
+```
+
+### From sources
+
+```bash
+git clone https://github.com/codex-team/capella.scala.git
+cd capella.scala
 sbt compile
 sbt run
 ```
@@ -74,6 +82,48 @@ val filteredUrlAnother = Filters.applyFilters(url, Seq(Filters.resize(700, 700),
 
 println(filteredUrlAnother)
 // got: https://capella.pics/07d4fa39-7465-474a-9e01-15a71bb71c32/resize/700x700/crop/500
+```
+
+## Cli Usage
+
+Currently support the following arguments
+* -f/--file - upload local file
+* -u/--url - upload file by URL
+* -i - apply filter to the result URL 
+
+Upload local file to Capella
+```bash
+java -jar capella.jar --file capella.png
+// output: https://capella.pics/fa10d5bc-f1e0-4527-b69d-a1b8334e7ae8
+```
+
+Upload file to Capella by URL
+```bash
+java -jar capella.jar --url https://ifmo.su/public/app/img/products/hawk.png
+// output: https://capella.pics/a05702c9-ba2a-47d0-8d6c-07596588a0e5
+```
+
+Upload and consistently apply several filters
+
+```bash
+java -jar capella.jar --url https://ifmo.su/public/app/img/products/hawk.png -i crop:250,250
+// output: https://capella.pics/bd2f6c54-b6da-4b9d-ad6b-36b089e3c470/crop/250x250
+```
+
+```bash
+java -jar capella.jar -i crop:250,250 -i resize:300 -i pixelize:100 --url https://ifmo.su/public/app/img/products/hawk.png
+// output: https://capella.pics/9cba0795-d4c9-4b43-aac8-82d7c6e3ef72/crop/250x250/resize/300/pixelize/100
+```
+
+If you not specify --file or --url, filters will by applied to the standard input
+```bash
+echo "https://capella.pics/9cba0795-d4c9-4b43-aac8-82d7c6e3ef72" | java -jar capella.jar -i crop:250,250,100,100 -i pixelize:100
+// output: https://capella.pics/9cba0795-d4c9-4b43-aac8-82d7c6e3ef72/crop/250x250&100,100/pixelize/100
+```
+
+```bash
+java -jar capella.jar --url https://ifmo.su/public/app/img/products/hawk.png | java -jar capella.jar -i pixelize:100 | java -jar capella.jar -i resize:500
+// output: https://capella.pics/8d4305cf-ffd0-4d3e-8eaa-327bcc179b00/pixelize/100/resize/500
 ```
 
 ## API Documentation

@@ -14,6 +14,8 @@ object Pipeline {
 
 }
 
+case class FilterArg(filterType: String, filterValues: Seq[Int])
+
 /**
   * Filtering helpers for image result URL
   */
@@ -75,6 +77,22 @@ object Filters {
     */
   def applyFilters(url: String, filters: Seq[String => String]): String = {
     filters.foldLeft(url) { (accumulator, f) => f(accumulator) }
+  }
+
+  /**
+    * Return applied method by name and arguments
+    *
+    * @param filter - case class with filter name and arguments
+    * @return - Appropriate function or self-adjoint function String => String
+    */
+  def callFilter(filter: FilterArg): (String => String) = filter match {
+    case FilterArg("pixelize", args) if args.length == 1 => this.pixelize(args.head)
+    case FilterArg("resize", args) if args.length == 1 => this.resize(args.head)
+    case FilterArg("resize", args) if args.length == 2 => this.resize(args(0), args(1))
+    case FilterArg("crop", args) if args.length == 1 => this.crop(args.head)
+    case FilterArg("crop", args) if args.length == 2 => this.crop(args(0), args(1))
+    case FilterArg("crop", args) if args.length == 4 => this.crop(args(0), args(1), args(2), args(3))
+    case _ => (x: String) => x
   }
 
   /* Partial calls */
